@@ -2,9 +2,24 @@ variable "identifier" {
   description = "The name of the RDS instance, if omitted, Terraform will assign a random, unique identifier"
 }
 
+variable "engine" {
+  description = "The database engine to use"
+}
+
+variable "engine_version" {
+  description = "The engine version to use"
+}
+
+variable "instance_class" {
+  description = "The instance type of the RDS instance"
+}
+
 variable "allocated_storage" {
   description = "The allocated storage in gigabytes"
 }
+
+# FIXME.
+variable "security_group_names" {}
 
 variable "storage_type" {
   description = "One of 'standard' (magnetic), 'gp2' (general purpose SSD), or 'io1' (provisioned IOPS SSD). The default is 'io1' if iops is specified, 'standard' if not. Note that this behaviour is different from the AWS web console, where the default is 'gp2'."
@@ -21,41 +36,9 @@ variable "kms_key_id" {
   default     = ""
 }
 
-variable "replicate_source_db" {
-  description = "Specifies that this resource is a Replicate database, and to use this value as the source database. This correlates to the identifier of another Amazon RDS Database to replicate."
-  default     = ""
-}
-
-variable "snapshot_identifier" {
-  description = "Specifies whether or not to create this database from a snapshot. This correlates to the snapshot ID you'd find in the RDS console, e.g: rds:production-2015-06-26-06-05."
-  default     = ""
-}
-
 variable "license_model" {
   description = "License model information for this DB instance. Optional, but required for some DB engines, i.e. Oracle SE1"
   default     = ""
-}
-
-variable "iam_database_authentication_enabled" {
-  description = "Specifies whether or mappings of AWS Identity and Access Management (IAM) accounts to database accounts is enabled"
-  default     = false
-}
-
-variable "engine" {
-  description = "The database engine to use"
-}
-
-variable "engine_version" {
-  description = "The engine version to use"
-}
-
-variable "final_snapshot_identifier" {
-  description = "The name of your final DB snapshot when this DB instance is deleted."
-  default     = false
-}
-
-variable "instance_class" {
-  description = "The instance type of the RDS instance"
 }
 
 variable "name" {
@@ -75,23 +58,18 @@ variable "port" {
   description = "The port on which the DB accepts connections"
 }
 
-variable "vpc_security_group_ids" {
-  description = "List of VPC security groups to associate"
-  default     = []
+variable "iam_database_authentication_enabled" {
+  description = "Specifies whether or mappings of AWS Identity and Access Management (IAM) accounts to database accounts is enabled"
+  default     = false
 }
 
-variable "db_subnet_group_name" {
-  description = "Name of DB subnet group. DB instance will be created in the VPC associated with the DB subnet group. If unspecified, will be created in the default VPC"
+variable "replicate_source_db" {
+  description = "Specifies that this resource is a Replicate database, and to use this value as the source database. This correlates to the identifier of another Amazon RDS Database to replicate."
   default     = ""
 }
 
-variable "parameter_group_name" {
-  description = "Name of the DB parameter group to associate. Setting this automatically disables parameter_group creation"
-  default     = ""
-}
-
-variable "option_group_name" {
-  description = "Name of the DB option group to associate. Setting this automatically disables option_group creation"
+variable "snapshot_identifier" {
+  description = "Specifies whether or not to create this database from a snapshot. This correlates to the snapshot ID you'd find in the RDS console, e.g: rds:production-2015-06-26-06-05."
   default     = ""
 }
 
@@ -125,16 +103,18 @@ variable "monitoring_role_arn" {
   default     = ""
 }
 
-variable "monitoring_role_name" {
-  description = "Name of the IAM role which will be created when create_monitoring_role is enabled."
-  default     = "rds-monitoring-role"
-}
+### Maybe used in IAM stuff
+# variable "monitoring_role_name" {
+#   description = "Name of the IAM role which will be created when create_monitoring_role is enabled."
+#   default     = "rds-monitoring-role"
+# }
 
-variable "create_monitoring_role" {
-  description = "Create IAM role with a defined name that permits RDS to send enhanced monitoring metrics to CloudWatch Logs."
-  default     = false
-}
+# variable "create_monitoring_role" {
+#   description = "Create IAM role with a defined name that permits RDS to send enhanced monitoring metrics to CloudWatch Logs."
+#   default     = false
+# }
 
+## version upgrades
 variable "allow_major_version_upgrade" {
   description = "Indicates that major version upgrades are allowed. Changing this parameter does not result in an outage and the change is asynchronously applied as soon as possible"
   default     = false
@@ -155,13 +135,18 @@ variable "maintenance_window" {
 }
 
 variable "skip_final_snapshot" {
-  description = "Determines whether a final DB snapshot is created before the DB instance is deleted. If true is specified, no DBSnapshot is created. If false is specified, a DB snapshot is created before the DB instance is deleted, using the value from final_snapshot_identifier"
-  default     = true
+  description = "Determines whether a final DB snapshot is created before the DB instance is deleted. WARNING! Specifying 'true' can cause data loss"
+  default     = false
 }
 
 variable "copy_tags_to_snapshot" {
   description = "On delete, copy all Instance tags to the final snapshot (if final_snapshot_identifier is specified)"
-  default     = false
+  default     = true
+}
+
+variable "final_snapshot_identifier" {
+  description = "The name of your final DB snapshot when this DB instance is deleted."
+  default     = ""
 }
 
 variable "backup_retention_period" {
@@ -171,71 +156,6 @@ variable "backup_retention_period" {
 
 variable "backup_window" {
   description = "The daily time range (in UTC) during which automated backups are created if they are enabled. Example: '09:46-10:16'. Must not overlap with maintenance_window"
-}
-
-variable "tags" {
-  description = "A mapping of tags to assign to all resources"
-  default     = {}
-}
-
-# DB subnet group
-variable "subnet_ids" {
-  type        = "list"
-  description = "A list of VPC subnet IDs"
-  default     = []
-}
-
-# DB parameter group
-variable "family" {
-  description = "The family of the DB parameter group"
-  default     = ""
-}
-
-variable "parameters" {
-  description = "A list of DB parameters (map) to apply"
-  default     = []
-}
-
-# DB option group
-variable "option_group_description" {
-  description = "The description of the option group"
-  default     = ""
-}
-
-variable "major_engine_version" {
-  description = "Specifies the major version of the engine that this option group should be associated with"
-  default     = ""
-}
-
-variable "options" {
-  type        = "list"
-  description = "A list of Options to apply."
-  default     = []
-}
-
-variable "create_db_subnet_group" {
-  description = "Whether to create a database subnet group"
-  default     = true
-}
-
-variable "create_db_parameter_group" {
-  description = "Whether to create a database parameter group"
-  default     = true
-}
-
-variable "create_db_option_group" {
-  description = "Whether to create a database option group"
-  default     = true
-}
-
-variable "create_db_instance" {
-  description = "Whether to create a database instance"
-  default     = true
-}
-
-variable "timezone" {
-  description = "(Optional) Time zone of the DB instance. timezone is currently only supported by Microsoft SQL Server. The timezone can only be set on creation. See MSSQL User Guide for more information."
-  default     = ""
 }
 
 variable "character_set_name" {
@@ -264,6 +184,82 @@ variable "deletion_protection" {
   default     = false
 }
 
-variable "vpc" {
-  description = "The VPC in which the database resides."
+variable "tags" {
+  description = "A mapping of tags to assign to all resources"
+  default     = {}
 }
+
+##### END AWS_DB_INSTANCE RESOURCE
+
+#### DB option group ----------------------------------
+
+variable "option_group_description" {
+  description = "The description of the option group"
+  default     = ""
+}
+
+variable "major_engine_version" {
+  description = "Specifies the major version of the engine that this option group should be associated with"
+  default     = ""
+}
+
+variable "options" {
+  type        = "list"
+  description = "A list of Options to apply."
+  default     = []
+}
+
+### DB parameter group ----------------------------
+variable "family" {
+  description = "The family of the DB parameter group"
+  default     = ""
+}
+
+variable "parameters" {
+  description = "A list of DB parameters (map) to apply"
+  default     = []
+}
+
+### DB subnet group ----------------------------
+variable "subnet_ids" {
+  type        = "list"
+  description = "A list of VPC subnet IDs"
+  default     = []
+}
+
+### VARIABLES NOT FOUND, or NOT NEEDED we Think!
+
+# variable "create_db_subnet_group" {
+#   description = "Whether to create a database subnet group"
+#   default     = true
+# }
+
+# variable "create_db_parameter_group" {
+#   description = "Whether to create a database parameter group"
+#   default     = true
+# }
+
+# variable "create_db_option_group" {
+#   description = "Whether to create a database option group"
+#   default     = true
+# }
+
+# variable "create_db_instance" {
+#   description = "Whether to create a database instance"
+#   default     = true
+# }
+
+# variable "vpc" {
+#   description = "The VPC in which the database resides."
+# }
+
+# variable "timezone" {
+#   description = "(Optional) Time zone of the DB instance. timezone is currently only supported by Microsoft SQL Server. The timezone can only be set on creation. See MSSQL User Guide for more information."
+#   default     = ""
+# }
+
+# FIXME.
+variable "db_subnet_group_name" {}
+
+variable "parameter_group_name" {}
+variable "option_group_name" {}

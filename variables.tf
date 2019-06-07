@@ -189,43 +189,51 @@ variable "tags" {
   default     = {}
 }
 
+variable "db_subnet_group_name" {}
+variable "parameter_group_name" {}
+variable "option_group_name" {}
+
 ##### END AWS_DB_INSTANCE RESOURCE
 
 #### DB option group ----------------------------------
 
-variable "option_group_description" {
-  description = "The description of the option group"
-  default     = ""
-}
+# variable "option_group_description" {
+#   description = "The description of the option group"
+#   # default     = ""
+# }
 
-variable "major_engine_version" {
-  description = "Specifies the major version of the engine that this option group should be associated with"
-  default     = ""
-}
+# variable "major_engine_version" {
+#   description = "Specifies the major version of the engine that this option group should be associated with"
+#   # default     = ""
+# }
 
-variable "options" {
-  type        = "list"
-  description = "A list of Options to apply."
-  default     = []
-}
+# variable "options" {
+#   type        = "list"
+#   description = "A list of Options to apply."
+#   # default     = []
+# }
 
 ### DB parameter group ----------------------------
-variable "family" {
-  description = "The family of the DB parameter group"
-  default     = ""
-}
+# variable "create_parameter_group" {
+#   description = "boolean to determine if a parameter group should be created."
+#   default = "false"
+# }
+# variable "family" {
+#   description = "The family of the DB parameter group"
+#   default     = ""
+# }
 
-variable "parameters" {
-  description = "A list of DB parameters (map) to apply"
-  default     = []
-}
+# variable "parameters" {
+#   description = "A list of DB parameters (map) to apply"
+#   default     = []
+# }
 
 ### DB subnet group ----------------------------
-variable "subnet_ids" {
-  type        = "list"
-  description = "A list of VPC subnet IDs"
-  default     = []
-}
+# variable "subnet_ids" {
+#   type        = "list"
+#   description = "A list of VPC subnet IDs"
+#   default     = []
+# }
 
 ### VARIABLES NOT FOUND, or NOT NEEDED we Think!
 
@@ -258,8 +266,3 @@ variable "subnet_ids" {
 #   default     = ""
 # }
 
-# FIXME.
-variable "db_subnet_group_name" {}
-
-variable "parameter_group_name" {}
-variable "option_group_name" {}

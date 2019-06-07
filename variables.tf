@@ -189,9 +189,15 @@ variable "tags" {
   default     = {}
 }
 
-variable "db_subnet_group_name" {}
-variable "parameter_group_name" {}
-variable "option_group_name" {}
+variable "db_subnet_group_name" {
+  default = ""
+}
+variable "parameter_group_name" {
+  default = ""
+}
+variable "option_group_name" {
+  default = ""
+}
 
 ##### END AWS_DB_INSTANCE RESOURCE
 

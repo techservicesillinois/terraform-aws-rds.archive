@@ -18,8 +18,9 @@ variable "allocated_storage" {
   description = "The allocated storage in gigabytes"
 }
 
-# FIXME.
-variable "security_group_names" {}
+variable "security_group_names" {
+description = "Space-delimited string list of security group names"
+}
 
 variable "storage_type" {
   description = "One of 'standard' (magnetic), 'gp2' (general purpose SSD), or 'io1' (provisioned IOPS SSD). The default is 'io1' if iops is specified, 'standard' if not. Note that this behaviour is different from the AWS web console, where the default is 'gp2'."
@@ -74,7 +75,7 @@ variable "snapshot_identifier" {
 }
 
 variable "availability_zone" {
-  description = "The Availability Zone of the RDS instance"
+  description = "The availability zone of the RDS instance"
   default     = ""
 }
 
@@ -114,7 +115,6 @@ variable "monitoring_role_arn" {
 #   default     = false
 # }
 
-## version upgrades
 variable "allow_major_version_upgrade" {
   description = "Indicates that major version upgrades are allowed. Changing this parameter does not result in an outage and the change is asynchronously applied as soon as possible"
   default     = false
@@ -180,7 +180,7 @@ variable "timeouts" {
 }
 
 variable "deletion_protection" {
-  description = "The database can't be deleted when this value is set to true."
+  description = "The database can't be deleted when this value is set to true"
   default     = false
 }
 
@@ -190,85 +190,16 @@ variable "tags" {
 }
 
 variable "db_subnet_group_name" {
+  description = "Name of DB subnet group. DB instance will be created in the VPC associated with the DB subnet group"
   default = ""
 }
+
 variable "parameter_group_name" {
+  description = "Name of the DB parameter group to associate"
   default = ""
 }
+
 variable "option_group_name" {
+  description = "Name of the DB option group to associate"
   default = ""
 }
-
-##### END AWS_DB_INSTANCE RESOURCE
-
-#### DB option group ----------------------------------
-
-# variable "option_group_description" {
-#   description = "The description of the option group"
-#   # default     = ""
-# }
-
-# variable "major_engine_version" {
-#   description = "Specifies the major version of the engine that this option group should be associated with"
-#   # default     = ""
-# }
-
-# variable "options" {
-#   type        = "list"
-#   description = "A list of Options to apply."
-#   # default     = []
-# }
-
-### DB parameter group ----------------------------
-# variable "create_parameter_group" {
-#   description = "boolean to determine if a parameter group should be created."
-#   default = "false"
-# }
-# variable "family" {
-#   description = "The family of the DB parameter group"
-#   default     = ""
-# }
-
-# variable "parameters" {
-#   description = "A list of DB parameters (map) to apply"
-#   default     = []
-# }
-
-### DB subnet group ----------------------------
-# variable "subnet_ids" {
-#   type        = "list"
-#   description = "A list of VPC subnet IDs"
-#   default     = []
-# }
-
-### VARIABLES NOT FOUND, or NOT NEEDED we Think!
-
-# variable "create_db_subnet_group" {
-#   description = "Whether to create a database subnet group"
-#   default     = true
-# }
-
-# variable "create_db_parameter_group" {
-#   description = "Whether to create a database parameter group"
-#   default     = true
-# }
-
-# variable "create_db_option_group" {
-#   description = "Whether to create a database option group"
-#   default     = true
-# }
-
-# variable "create_db_instance" {
-#   description = "Whether to create a database instance"
-#   default     = true
-# }
-
-# variable "vpc" {
-#   description = "The VPC in which the database resides."
-# }
-
-# variable "timezone" {
-#   description = "(Optional) Time zone of the DB instance. timezone is currently only supported by Microsoft SQL Server. The timezone can only be set on creation. See MSSQL User Guide for more information."
-#   default     = ""
-# }
-

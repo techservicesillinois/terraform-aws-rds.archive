@@ -13,6 +13,7 @@ module "db" {
 # Identifier for RDS instance.
 identifier = "service"
 
+# Securit group created by the https://github.com/techservicesillinois/terraform-aws-client-server-security-group module
 security_group_names = "cis-db-servers"
 
 # Name of database to be created.
@@ -125,6 +126,7 @@ tags = {
 | port | The port on which the DB accepts connections | string | - | yes |
 | publicly_accessible | Bool to control if instance is publicly accessible | string | `false` | no |
 | replicate_source_db | Specifies that this resource is a Replicate database, and to use this value as the source database. This correlates to the identifier of another Amazon RDS Database to replicate. | string | `` | no |
+| security_group_names | Additonal security groups to associated with the task or service. This is a space delimited string list of security group names. | - | no |
 | skip_final_snapshot | Determines whether a final DB snapshot is created before the DB instance is deleted. If true is specified, no DBSnapshot is created. If false is specified, a DB snapshot is created before the DB instance is deleted, using the value from final_snapshot_identifier | string | `true` | no |
 | snapshot_identifier | Specifies whether or not to create this database from a snapshot. This correlates to the snapshot ID you'd find in the RDS console, e.g: rds:production-2015-06-26-06-05. | string | `` | no |
 | storage_encrypted | Specifies whether the DB instance is encrypted | string | `false` | no |
@@ -132,8 +134,6 @@ tags = {
 | tags | A mapping of tags to assign to all resources | string | `<map>` | no |
 | timeouts | (Optional) Updated Terraform resource management timeouts. Applies to `aws_db_instance` in particular to permit resource management times | map | `<map>` | no |
 | username | Username for the master DB user | string | - | yes |
-| vpc | Name of VPC in which DB resides | string | - | yes |
-| vpc_security_group_ids | List of VPC security groups to associate | string | `<list>` | no |
 
 ## Outputs
 

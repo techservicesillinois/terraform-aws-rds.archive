@@ -1,5 +1,5 @@
 variable "allocated_storage" {
-  description = "The allocated storage in gigabytes"
+  description = "(Required unless a snapshot_identifier or replicate_source_db is provided) The allocated storage in gibibytes."
 }
 
 variable "allow_major_version_upgrade" {
@@ -29,6 +29,7 @@ variable "backup_retention_period" {
 
 variable "backup_window" {
   description = "The daily time range (in UTC) during which automated backups are created if they are enabled. Example: '09:46-10:16'. Must not overlap with maintenance_window"
+  default     = "09:46-10:16"
 }
 
 variable "character_set_name" {
@@ -47,8 +48,8 @@ variable "db_subnet_group_name" {
 }
 
 variable "deletion_protection" {
-  description = "The database can't be deleted when this value is set to true"
-  default     = false
+  description = "The database can't be deleted when this value is set to true."
+  default     = true
 }
 
 variable "enabled_cloudwatch_logs_exports" {
@@ -57,11 +58,12 @@ variable "enabled_cloudwatch_logs_exports" {
 }
 
 variable "engine" {
-  description = "The database engine to use"
+  description = "(Required) The database engine to use"
 }
 
 variable "engine_version" {
   description = "The engine version to use"
+  default = ""
 }
 
 variable "final_snapshot_identifier" {

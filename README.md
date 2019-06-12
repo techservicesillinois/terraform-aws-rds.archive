@@ -4,6 +4,8 @@ Terraform module which creates the [DB Instance](https://www.terraform.io/docs/p
 
 NOTE: please review the [db_security_group](https://github.com/techservicesillinois/terraform-aws-client-server-security-group) module to create security groups to be used by the clients and servers of this `DB Instance`. This module creates two RDS security groups – one to be added to authorized clients, and one to be added to the RDS servers to allow access only by the authorized clients.
 
+**NOTE: Deletion Protection default and description on how to delete database when needed.**
+
 ## Usage
 
 ```hcl

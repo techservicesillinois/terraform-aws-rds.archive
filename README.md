@@ -18,7 +18,7 @@ must set the attribute to `false` and then apply this change using Terraform.
 
 Once applied, you can then run `terraform destroy` to destroy the database, which
 includes destroying daily snapshots. **If you do not make a final snapshot, your
-data will be irrevoably lost.**
+data will be irrevocably lost.**
 
 ## Usage
 

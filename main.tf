@@ -35,24 +35,26 @@ resource "aws_db_instance" "default" {
   kms_key_id                          = "${var.kms_key_id}"
   license_model                       = "${var.license_model}"
   maintenance_window                  = "${var.maintenance_window}"
+
   # monitoring_interval                 = "${var.monitoring_interval}"
   # monitoring_role_arn                 = "${coalesce(var.monitoring_role_arn, join("", aws_iam_role.enhanced_monitoring.*.arn))}"
-  multi_az                            = "${var.multi_az}"
-  name                                = "${var.name}"
-  option_group_name                   = "${var.option_group_name}"
-  parameter_group_name                = "${var.parameter_group_name}"
-  password                            = "${var.password}"
-  port                                = "${var.port}"
-  publicly_accessible                 = "${var.publicly_accessible}"
-  replicate_source_db                 = "${var.replicate_source_db}"
-  skip_final_snapshot                 = "${var.skip_final_snapshot}"
-  snapshot_identifier                 = "${var.snapshot_identifier}"
-  storage_encrypted                   = "${var.storage_encrypted}"
-  storage_type                        = "${var.storage_type}"
-  tags                                = "${merge(map("Name", var.identifier), var.tags)}"
-  timeouts                            = "${var.timeouts}"
-  username                            = "${var.username}"
-  
+  multi_az = "${var.multi_az}"
+
+  name                 = "${var.name}"
+  option_group_name    = "${var.option_group_name}"
+  parameter_group_name = "${var.parameter_group_name}"
+  password             = "${var.password}"
+  port                 = "${var.port}"
+  publicly_accessible  = "${var.publicly_accessible}"
+  replicate_source_db  = "${var.replicate_source_db}"
+  skip_final_snapshot  = "${var.skip_final_snapshot}"
+  snapshot_identifier  = "${var.snapshot_identifier}"
+  storage_encrypted    = "${var.storage_encrypted}"
+  storage_type         = "${var.storage_type}"
+  tags                 = "${merge(map("Name", var.identifier), var.tags)}"
+  timeouts             = "${var.timeouts}"
+  username             = "${var.username}"
+
   # Calculated from "security_group_names" variable
-  vpc_security_group_ids              = ["${data.aws_security_group.selected.*.id}"]
+  vpc_security_group_ids = ["${data.aws_security_group.selected.*.id}"]
 }

@@ -1,8 +1,16 @@
-# AWS RDS Terraform module
+# rds
 
-Terraform module which creates the [DB Instance](https://www.terraform.io/docs/providers/aws/r/db_instance.html) RDS resources on AWS.
+Provide an [RDS database instance](https://www.terraform.io/docs/providers/aws/r/db_instance.html).
 
-NOTE: please review the [db_security_group](https://github.com/techservicesillinois/terraform-aws-client-server-security-group) module to create security groups to be used by the clients and servers of this `DB Instance`. This module creates two RDS security groups – one to be added to authorized clients, and one to be added to the RDS servers to allow access only by the authorized clients.
+Use the [terraform-aws-client-server-security-group](https://github.com/techservicesillinois/terraform-aws-client-server-security-group) module to create security groups
+to be used by clients and servers of this RDS instance. The referred-to module
+creates two RDS security groups – one a client security group, and the other a
+server security group.
+The server security group should be referenced in the `security_group_names`
+attribute when building an RDS instance.
+The client security group should be added to authorized clients. and one
+Members of the client security group are granted access to the RDS servers on
+the appropriate network port.
 
 **NOTE:** The `deletion_protection` attribute is `true` by default in order to make it
 difficult to unintentionally destroy a persistent resource. To enable destruction, you

@@ -67,7 +67,7 @@ variable "engine_version" {
 }
 
 variable "final_snapshot_identifier" {
-  description = "The name of your final DB snapshot when this DB instance is deleted."
+  description = "TODO: udpate description. The name of your final DB snapshot when this DB instance is deleted."
   default     = ""
 }
 
@@ -77,11 +77,11 @@ variable "iam_database_authentication_enabled" {
 }
 
 variable "identifier" {
-  description = "The name of the RDS instance, if omitted, Terraform will assign a random, unique identifier"
+  description = "(REQUIRED) The name of the RDS instance, if omitted, Terraform will assign a random, unique identifier"
 }
 
 variable "instance_class" {
-  description = "The instance type of the RDS instance"
+  description = "(REQUIRED) The instance type of the RDS instance"
 }
 
 variable "iops" {
@@ -101,6 +101,7 @@ variable "license_model" {
 
 variable "maintenance_window" {
   description = "The window to perform maintenance in. Syntax: 'ddd:hh24:mi-ddd:hh24:mi'. Eg: 'Mon:00:00-Mon:03:00'"
+  default     = ""
 }
 
 # variable "monitoring_interval" {
@@ -166,13 +167,13 @@ variable "skip_final_snapshot" {
 }
 
 variable "snapshot_identifier" {
-  description = "Specifies whether or not to create this database from a snapshot. This correlates to the snapshot ID you'd find in the RDS console, e.g: rds:production-2015-06-26-06-05."
+  description = "TODO come up with plan if default is needed. Specifies whether or not to create this database from a snapshot. This correlates to the snapshot ID you'd find in the RDS console, e.g: rds:production-2015-06-26-06-05."
   default     = ""
 }
 
 variable "storage_encrypted" {
   description = "Specifies whether the DB instance is encrypted"
-  default     = false
+  default     = true
 }
 
 variable "storage_type" {

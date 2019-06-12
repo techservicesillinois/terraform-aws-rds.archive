@@ -15,15 +15,15 @@ module "db" {
 # Identifier for RDS instance.
 identifier = "service"
 
-# Securit group created by the https://github.com/techservicesillinois/terraform-aws-client-server-security-group module
-security_group_names = "cis-db-servers"
+# Security group referenced below is created by the https://github.com/techservicesillinois/terraform-aws-client-server-security-group module.
+security_group_names = "service-db-servers"
 
 # Name of database to be created.
 name     = "service-db"
 
 # NOTE: Terraform-specified password is used to bring up infrastructure,
 # but is insecure because it's stored in the infrastructure state file.
-# Recommend changing password IMMEDIATELY to new value using AWS console,
+# We recommend changing password IMMEDIATELY to new value using AWS console,
 # and saving that password as a secure parameter in Amazon SSM.
 
 # User name and password.
@@ -36,51 +36,51 @@ port     = "1521"
 engine         = "oracle-ee"
 engine_version = "12.1.0.2.v11"
 
-# Don't do this in production!
+# Don't use the following settings in production!
 # apply_immediately = true
 # allow_major_version_upgrade = true
 
 # Instance class and storage in gigabytes.
-instance_class    = "db.t2.large"
+instance_class    = "db.t2.medium"
 allocated_storage = "100"
 
 # Automatically apply minor version upgrades during maintenance window.
-auto_minor_version_upgrade = "true"
+auto_minor_version_upgrade = true
 
 # Save backups for this many days.
 backup_retention_period = "7"
 
 # Deploy in multiple availability zones.
-multi_az           = "false"
+multi_az           = false
 
-# Maintenance window is expressed in UTC.
-maintenance_window = "Sun:04:00-Sun:07:00"
-
-# Backup window is expressed in UTC.
+# Backup window is expressed in UTC. Must not overlap with maintenance window.
 backup_window      = "07:00-10:00"
+
+# Maintenance window is expressed in UTC. Must not overlap with backup window.
+maintenance_window = "Sun:04:00-Sun:07:00"
 
 # When set to "true", deleting the database instance using the API or
 # Terraform is prohibited. In order to delete the database (and snapshots),
 # this setting must be changed to "false", either using Terraform
 # or the AWS console.
-deletion_protection = "true"
+deletion_protection = true
 
-# Initial database build uses the named snapshot.
-snapshot_identifier = "service-snapshot"
+# If specified, use snapshot for initial database build.
+# snapshot_identifier = "service-snapshot"
 
 ###########################################################################
 # WARNING: Use caution; setting this value to "true" can cause data loss. #
 ###########################################################################
 skip_final_snapshot = "false"
 
-# Final database snapshot is given this identifier.
-final_snapshot_identifier = "service-final"
+# Final database snapshot is given this identifier by default.
+# final_snapshot_identifier = "service-FINAL"
 
-# group names (resources should already exist)
-db_subnet_group_name = "techservicesastest2"
+# Subnet, parameter, and option group resources must already exist.
+db_subnet_group_name = "develop-subnet-2"
 parameter_group_name = "service-pg"
+# Note that RDS manages default option group.
 option_group_name    = "default:oracle-ee-12-1"
-
 
 tags = {
   Environment = "test"
@@ -111,15 +111,15 @@ tags = {
 | engine_version | The engine version to use | string | - | yes |
 | final_snapshot_identifier | The name of your final DB snapshot when this DB instance is deleted. | string | `false` | no |
 | iam_database_authentication_enabled | Specifies whether or mappings of AWS Identity and Access Management (IAM) accounts to database accounts is enabled | string | `false` | no |
-| identifier | The name of the RDS instance, if omitted, Terraform will assign a random, unique identifier | string | - | yes |
+| identifier | The name of the RDS instance. If omitted, Terraform will assign a random, unique identifier | string | - | yes |
 | instance_class | The instance type of the RDS instance | string | - | yes |
 | iops | The amount of provisioned IOPS. Setting this implies a storage_type of 'io1' | string | `0` | no |
 | kms_key_id | The ARN for the KMS encryption key. If creating an encrypted replica, set this to the destination KMS ARN. If storage_encrypted is set to true and kms_key_id is not specified the default KMS key created in your account will be used | string | `` | no |
 | license_model | License model information for this DB instance. Optional, but required for some DB engines, i.e. Oracle SE1 | string | `` | no |
 | maintenance_window | The window to perform maintenance in. Syntax: 'ddd:hh24:mi-ddd:hh24:mi'. Eg: 'Mon:00:00-Mon:03:00' | string | - | yes |
-| monitoring_interval | (COMMENTED OUT) The interval, in seconds, between points when Enhanced Monitoring metrics are collected for the DB instance. To disable collecting Enhanced Monitoring metrics, specify 0. The default is 0. Valid Values: 0, 1, 5, 10, 15, 30, 60. | string | `0` | no |
-| monitoring_role_arn | (COMMENTED OUT) The ARN for the IAM role that permits RDS to send enhanced monitoring metrics to CloudWatch Logs. Must be specified if monitoring_interval is non-zero. | string | `` | no |
-| monitoring_role_name | (COMMENTED OUT) Name of the IAM role which will be created when create_monitoring_role is enabled. | string | `rds-monitoring-role` | no |
+| ~~monitoring_interval~~ | ~~The interval, in seconds, between points when Enhanced Monitoring metrics are collected for the DB instance. To disable collecting Enhanced Monitoring metrics, specify 0. The default is 0. Valid Values: 0, 1, 5, 10, 15, 30, 60.~~ | ~~string~~ | ~~`0`~~ | ~~no~~ |
+| ~~monitoring_role_arn~~ | ~~ARN for the IAM role that permits RDS to send enhanced monitoring metrics to CloudWatch Logs. Must be specified if monitoring_interval is non-zero.~~ | ~~string~~ | ~~``~~ | ~~no~~ |
+| ~~monitoring_role_name~~ | (COMMENTED OUT) Name of the IAM role which will be created when create_monitoring_role is enabled. | string | `rds-monitoring-role` | no |
 | multi_az | Specifies if the RDS instance is multi-AZ | string | `false` | no |
 | name | The DB name to create. If omitted, no database is created initially | string | `` | no |
 | option_group_name | Name of the DB option group to associate. Setting this automatically disables option_group creation | string | `` | no |

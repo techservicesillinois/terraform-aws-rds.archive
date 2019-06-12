@@ -4,7 +4,13 @@ Terraform module which creates the [DB Instance](https://www.terraform.io/docs/p
 
 NOTE: please review the [db_security_group](https://github.com/techservicesillinois/terraform-aws-client-server-security-group) module to create security groups to be used by the clients and servers of this `DB Instance`. This module creates two RDS security groups – one to be added to authorized clients, and one to be added to the RDS servers to allow access only by the authorized clients.
 
-**NOTE: TODO Deletion Protection default and description on how to delete database when needed.**
+**NOTE:** The `deletion_protection` attribute is `true` by default in order to make it
+difficult to unintentionally destroy a persistent resource. To enable destruction, you
+must set the attribute to `false` and then apply this change using Terraform.
+
+Once applied, you can then run `terraform destroy` to destroy the database, which
+includes destroying daily snapshots. **If you do not make a final snapshot, your
+data will be irrevoably lost.**
 
 ## Usage
 
@@ -119,9 +125,9 @@ tags = {
 | maintenance_window | The window to perform maintenance in. Syntax: 'ddd:hh24:mi-ddd:hh24:mi'. Eg: 'Mon:00:00-Mon:03:00' | string | - | yes |
 | ~~monitoring_interval~~ | ~~The interval, in seconds, between points when Enhanced Monitoring metrics are collected for the DB instance. To disable collecting Enhanced Monitoring metrics, specify 0. The default is 0. Valid Values: 0, 1, 5, 10, 15, 30, 60.~~ | ~~string~~ | ~~`0`~~ | ~~no~~ |
 | ~~monitoring_role_arn~~ | ~~ARN for the IAM role that permits RDS to send enhanced monitoring metrics to CloudWatch Logs. Must be specified if monitoring_interval is non-zero.~~ | ~~string~~ | ~~``~~ | ~~no~~ |
-| ~~monitoring_role_name~~ | (COMMENTED OUT) Name of the IAM role which will be created when create_monitoring_role is enabled. | string | `rds-monitoring-role` | no |
+| ~~monitoring_role_name~~ | ~~Name of the IAM role which will be created when create_monitoring_role is enabled.~~ | ~~string~~ | ~~`rds-monitoring-role`~~ | ~~no~~ |
 | multi_az | Specifies if the RDS instance is multi-AZ | string | `false` | no |
-| name | The DB name to create. If omitted, no database is created initially | string | `` | no |
+| name | The DB name to create. If omitted, no database is created initially. | string | `` | no |
 | option_group_name | Name of the DB option group to associate. Setting this automatically disables option_group creation | string | `` | no |
 | parameter_group_name | Name of the DB parameter group to associate. | string | `` | no |
 | password | Password for the master DB user. Note that this may show up in logs, and it will be stored in the state file | string | - | yes |
@@ -151,10 +157,8 @@ tags = {
 
 ## Authors
 
-Currently maintained by [these awesome contributors](https://github.com/terraform-aws-modules/terraform-aws-rds/graphs/contributors), with additions by the University of Illinois
-at Urbana-Champaign.
-Migrated from `terraform-community-modules/tf_aws_rds`, where it was maintained by [these awesome contributors](https://github.com/terraform-community-modules/tf_aws_rds/graphs/contributors).
-Module managed by [Anton Babenko](https://github.com/antonbabenko).
+This module is an all-new module produced by the University of Illinois at Urbana-Champaign.
+We adapted some code from [https://github.com/terraform-aws-modules/terraform-aws-rds/](https://github.com/terraform-aws-modules/terraform-aws-rds/).
 
 ## License
 

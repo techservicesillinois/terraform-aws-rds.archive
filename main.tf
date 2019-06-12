@@ -55,6 +55,15 @@ resource "aws_db_instance" "default" {
   timeouts             = "${var.timeouts}"
   username             = "${var.username}"
 
+  # Database password is established on creation. It should be changed IMMEDIATELY,
+  # and should be maintained in Amazon SSM so that the initial password stored
+  # in Terraform's state file is no longer usable. Similarly, we do *NOT* want
+  # Terraform to downgrade database instances after `auto_minor_version_upgrade`
+  # has done its work.
+
+  lifecycle {
+    ignore_changes = ["engine_version", "password"]
+  }
   # Calculated from "security_group_names" variable
   vpc_security_group_ids = ["${data.aws_security_group.selected.*.id}"]
 }
